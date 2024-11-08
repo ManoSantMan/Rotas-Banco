@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel='stylesheet' type='text/css' media='screen' href='styles.css'>
+    <title>Controle Financeiro</title>
+    
+</head>
+<body>
+    <div class="container">
+        <h2>Adicionar Transação</h2><br>
+
+        <center><div class="circle-container">
+            <svg class="circle" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                <path class="circle-background" d="M18 2.0845a15.9155 15.9155 0 0 1 0 31.831 15.9155 15.9155 0 0 1 0-31.831" />
+                <path class="circle-foreground" d="M18 2.0845a15.9155 15.9155 0 0 1 0 31.831 15.9155 15.9155 0 0 1 0-31.831" />
+            </svg>
+            <div class="percentage-text">0%</div>
+        </div></center>
+
+        <form id="form-insert">
+            <label for="tipo">Tipo</label>
+            <input type="text" id="tipo" placeholder="Tipo da transação" required>
+            
+            <label for="valor">Valor</label>
+            <input type="number" id="valor" placeholder="Valor" required>
+            
+            <label for="data">Data</label>
+            <input type="date" id="data" required>
+            
+            <label for="descricao">Descrição</label>
+            <textarea id="descricao" placeholder="Descrição da transação" required></textarea>
+            
+            <button type="submit">Inserir</button>
+        </form><br>
+
+        <button id="show-transactions-btn">Mostrar Transações</button>
+
+        <div class="transacoes" id="transacoes-list">
+            <p class="no-transactions">Nenhuma transação realizada ainda.</p>
+        </div>
+    </div>
+
+    <script>
+        const apiUrl = 'http://localhost:3000'; // URL do seu servidor Node.js
+
+        // Função para adicionar transação ao banco de dados
+        async function Insert() {
+            const tipo = document.getElementById("tipo").value;
+            const valor = document.getElementById("valor").value;
+            const data = document.getElementById("data").value;
+            const descricao = document.getElementById("descricao").value;
+
+            // Verificar se todos os campos estão preenchidos
+            if (!tipo || !valor || !data || !descricao) {
+                alert("Por favor, preencha todos os campos.");
+                return;
+            }
+
+            // Enviar os dados para o servidor
+            const response = await fetch(`${apiUrl}/add-transacao`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    tipo,
+                    valor,
+                    data,
+                    descricao,
+                }),
+            });
+
+            if (response.ok) {
+                alert("Transação adicionada com sucesso!");
+                document.getElementById("form-insert").reset();
+            } else {
+                alert("Erro ao adicionar transação.");
+            }
+        }
+
+        // Função para mostrar as transações
+        async function showTransactions() {
+            const response = await fetch(`${apiUrl}/transacoes`);
+            const transacoes = await response.json();
+
+            const transacoesList = document.getElementById("transacoes-list");
+            transacoesList.innerHTML = "";
+
+            if (transacoes.length === 0) {
+                transacoesList.innerHTML = "<p class='no-transactions'>Nenhuma transação realizada ainda.</p>";
+                return;
+            }
+
+            transacoes.forEach((transacao) => {
+                const transacaoDiv = document.createElement("div");
+                transacaoDiv.classList.add("transacao-item");
+
+                transacaoDiv.innerHTML = `
+                    <h4>${transacao.tipo} - R$ ${parseFloat(transacao.valor).toFixed(2)}</h4>
+                    <p><strong>Data:</strong> ${transacao.data}</p>
+                    <p><strong>Descrição:</strong> ${transacao.descricao}</p>
+                `;
+                
+                transacoesList.appendChild(transacaoDiv);
+            });
+        }
+
+        // Adicionar eventos para o formulário
+        document.getElementById("form-insert").addEventListener("submit", function(event) {
+            event.preventDefault(); // Impede o envio do formulário tradicional
+            Insert();
+        });
+
+        document.getElementById("show-transactions-btn").addEventListener("click", showTransactions);
+    </script>
+</body>
+</html>

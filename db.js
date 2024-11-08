@@ -6,38 +6,7 @@ const conexaoComBanco = new Sequelize("financeiro", "root", "", {
   dialect: "mysql",
 });
 
-
-
-const conta = conexaoComBanco.define("conta", {
-    nome: {
-      type: Sequelize.TEXT,//TEXTAREA
-    },
-    saldo: {
-      type: Sequelize.STRING,//TEXTAREA
-    },
-});
-
-const usuario = conexaoComBanco.define("usuario", {
-  nome: {
-    type: Sequelize.TEXT,//TEXTAREA
-  },
-  email: {
-    type: Sequelize.TEXT,//TEXTAREA
-  },
-  senha: {
-    type: Sequelize.TEXT,//TEXTAREA
-  },
-});
-
-const categoria = conexaoComBanco.define("categoria", {
-  nome: {
-    type: Sequelize.TEXT,//TEXTAREA
-  },
-
-});
-
-
-const transacao = conexaoComBanco.define("transacao", {
+const transacoes = conexaoComBanco.define("transacao", {
   tipo: {
     type: Sequelize.TEXT,//TEXTAREA
   },
@@ -52,35 +21,63 @@ const transacao = conexaoComBanco.define("transacao", {
   },
 
 });
+
 async function createDb() {
-  await categoria.sync();
-  await transacao.sync();
-  await usuario.sync();
-  await conta.sync()
+  // Exemplo simples de criação do banco de dados
+  const db = await openDatabase('financeiro', '1.0', 'Banco de Dados de Transações', 2 * 1024 * 1024);
+  db.transaction(function(tx) {
+    tx.executeSql('CREATE TABLE IF NOT EXISTS transacoes (id INTEGER PRIMARY KEY, tipo TEXT, valor REAL, data TEXT, descricao TEXT)');
+  });
 }
 
-Insert()
-// INSERT
+const transacao = {
+  create: function(data) {
+    const db = openDatabase('financeiro', '1.0', 'Banco de Dados de Transações', 2 * 1024 * 1024);
+    db.transaction(function(tx) {
+      tx.executeSql(
+        'INSERT INTO transacoes (tipo, valor, data, descricao) VALUES (?, ?, ?, ?)',
+        [data.tipo, data.valor, data.data, data.descricao],
+        function(tx, result) {
+          console.log('Inserido com sucesso:', result);
+        },
+        function(tx, error) {
+          console.error('Erro ao inserir:', error);
+        }
+      );
+    });
+  }
+};
+
+
+// Função para inserir os dados com base nas alterações do usuário
 async function Insert() {
-await createDb()
-categoria.create({
- nome: "Um conteudo qualquer",
-});
+  // Coletar dados dos campos do formulário
+  const tipo = document.getElementById("tipo").value;
+  const valor = document.getElementById("valor").value;
+  const data = document.getElementById("data").value;
+  const descricao = document.getElementById("descricao").value;
 
-usuario.create({
- nome: "Santiago",
- email: "sant@email.com",
- senha: "senha",
-});
+  // Verificar se todos os campos estão preenchidos
+  if (!tipo || !valor || !data || !descricao) {
+    alert("Por favor, preencha todos os campos.");
+    return;
+  }
 
-conta.create({
-nome: "nome da conta",
- saldo: "10",
-});
+  // Realizar o processamento da transação, inserindo no banco de dados
+  await createDb();
+  await transacao.create({
+    tipo: tipo,
+    valor: valor,
+    data: data,
+    descricao: descricao
+  });
 
-transacao.create({
-  tipo: "blablabla",
-  valor: "250",
-  data: "12-10-24",
-  descricao: "muito cash",
-});}
+  // Limpar os campos do formulário após inserção (opcional)
+  document.getElementById("form-insert").reset();
+}
+
+// Aguardar o evento de envio do formulário para chamar a função Insert
+document.getElementById("form-insert").addEventListener("submit", function(event) {
+  event.preventDefault(); // Impede o envio do formulário tradicional
+  Insert();
+});

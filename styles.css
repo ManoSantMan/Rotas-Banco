@@ -1,0 +1,203 @@
+/* Resetando estilos padrão */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif; /* Tipografia moderna */
+    background: linear-gradient(135deg, #2a2a2a, #1a1a1a); /* Gradiente de fundo escuro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 1000;
+    color: #ffffff;
+}
+
+/* Container principal */
+.container {
+    background: rgba(255, 255, 255, 0.1); /* Fundo translúcido */
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15); /* Sombra suave e futurista */
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    backdrop-filter: blur(10px); /* Efeito de desfoque no fundo */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Borda sutil */
+    box-sizing: border-box;
+    height: 1110px;
+    display: inline;
+}
+
+/* Título do formulário */
+h2 {
+    text-align: center;
+    font-size: 30px;
+    font-weight: 700;
+    color: #00bcd4; /* Azul neon */
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Estilo para os campos de input */
+input, textarea {
+    width: 100%;
+    padding: 16px;
+    margin-bottom: 20px;
+    border: 2px solid #555;
+    border-radius: 12px;
+    font-size: 16px;
+    background-color: #2c2c2c;
+    color: #fff;
+    transition: all 0.3s ease-in-out;
+    outline: none;
+}
+
+input:focus, textarea:focus {
+    border-color: #00bcd4;
+    box-shadow: 0 0 15px rgba(0, 188, 212, 0.5); /* Efeito de foco futurista */
+}
+
+/* Estilo para o botão de submit */
+button {
+    width: 100%;
+    padding: 18px;
+    background-color: #00bcd4;
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 5px 15px rgba(0, 188, 212, 0.4);
+}
+
+button:hover {
+    background-color: #03a9f4; /* Cor mais escura para hover */
+    box-shadow: 0 5px 20px rgba(3, 169, 244, 0.6);
+}
+
+button:active {
+    transform: scale(0.98); /* Efeito de clique */
+}
+
+/* Estilo para os labels */
+label {
+    font-size: 16px;
+    color: #aaa;
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* Estilo para a área de texto (textarea) */
+textarea {
+    resize: none; /* Impede o redimensionamento */
+    height: 150px;
+    line-height: 1.5;
+}
+
+/* Área de transações */
+.transacoes {
+    margin-top: 40px;
+    padding: 25px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.transacao-item {
+    background: rgba(255, 255, 255, 0.1);
+    margin-bottom: 25px;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.transacao-item:hover {
+    transform: translateY(-10px); /* Eleva a transação */
+    box-shadow: 0 15px 40px rgba(0, 188, 212, 0.4); /* Efeito futurista */
+}
+
+.transacao-item h4 {
+    margin: 0;
+    font-size: 22px;
+    color: #00bcd4; /* Azul neon */
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.transacao-item p {
+    margin: 8px 0;
+    color: #ddd;
+    font-size: 14px;
+}
+
+.transacao-item span {
+    color: #00bcd4;
+    font-weight: 500;
+}
+
+/* Mensagem caso não haja transações */
+.no-transactions {
+    text-align: center;
+    font-size: 16px;
+    color: #aaa;
+    font-style: italic;
+}
+
+/* Ajustes para dispositivos menores */
+@media (max-width: 768px) {
+    .container {
+        padding: 30px;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    input, textarea {
+        width: 100%;
+    }
+}
+
+.circle-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+.circle {
+    transform: rotate(-90deg); /* Girar o SVG para começar a animação do topo */
+    width: 100%;
+    height: 100%;
+}
+
+.circle-background,
+.circle-foreground {
+    fill: none;
+    stroke-width: 3;
+}
+
+.circle-background {
+    stroke: #00bcd4; /* Cor do fundo */
+}
+
+.circle-foreground {
+    stroke: #00bcd4; /* Cor do progresso */
+    stroke-linecap: round;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    transition: stroke-dashoffset 1s ease-out;
+}
+
+.percentage-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffffff;
+}
